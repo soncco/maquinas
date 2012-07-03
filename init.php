@@ -1,6 +1,6 @@
 <?php
 /**
- * Inicialización de variables e inclusión de archivos
+ * InicializaciÃ³n de variables e inclusiÃ³n de archivos
  */
 include_once('config.php');
 
@@ -16,7 +16,7 @@ $bcdb->externos				= $table_prefix . 'externos';
 $bcdb->maquinas				= $table_prefix . 'maquinas';
 $bcdb->alquileres			= $table_prefix . 'alquileres';
 $bcdb->opciones				= $table_prefix . 'opciones';
-$bcdb->usuarios				= $table_prefix . 'usuarios';
+$bcdb->admin  				= $table_prefix . 'admin';
 
 # Funciones independientes
 include_once(INCLUDE_PATH . 'formatting-functions.php');
