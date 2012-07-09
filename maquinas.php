@@ -10,21 +10,18 @@
 	// Si es que el formulario se ha enviado
 	if($postback) :
 		$maquina = array(
-			'nombre' => $_POST['nombre'],
-			'uit' => $_POST['uit'],
-			'tarifa' => $_POST['tarifa'],
-			'tiempo' => $_POST['tiempo']);
+			'descripcion' => $_POST['descripcion'],
+			'idoperador' => $_POST['idoperador']);
 		
 		// Verificación
-		if (empty($maquina['nombre']) ||
-			empty($maquina['tarifa'])) :
+		if (empty($maquina['descripcion']) || empty($maquina['idoperador'])) :
 			$error = true;
 			$msg = "Ingrese la información obligatoria.";
 		else :
 		
 			$maquina = array_map('strip_tags', $maquina);
 			// Guarda la máquina
-			$id = save_item(0, $maquina, $bcdb->maquinas);
+			$id = save_item(0, $maquina, $bcdb->maquina);
 			
 			if($id) :
 				$msg = "La información se guardó correctamente.";
@@ -35,9 +32,13 @@
 		endif;
 	endif;
 	
+  // Trae los operadores
+  $pager = false;
+  $operadores = get_items($bcdb->operador);
+  
 	// Trae las máquinas
 	$pager = true;
-	$maquinas = get_items($bcdb->maquinas);
+	$maquinas = get_items($bcdb->maquina);
 	
 	// Paginación
 	
@@ -61,96 +62,96 @@
 			indicator : "Guardando...",
 			tooltip   : "Click para editar..."
 		});
-		$('#nombre').focus();
+    $(".clicks").editable("/datos-maquina.php", { 
+      indicator : "Guardando...",
+      loadurl   : "/scripts/operadores.php",
+      type   : "select",
+      submit : "OK",
+      style  : "inherit",
+      submitdata : function() {
+        return {op : true};
+      }
+    });
+		$('#descripcion').focus();
 //		$("#frmmaquina").validate();
 	});
 </script>
-<title>Máquinas | Sistema de Caja</title>
+<title>Máquinas | Alquiler de máquinas</title>
 </head>
 
 <body>
-	<div class="container_16">
-   	  <div id="header">
-       	<h1 id="logo"> <a href="/"><span>Sistema de Caja</span></a> </h1>
-<?php include "menutop.php"; ?>
-          <?php if(isset($_SESSION['loginuser'])) : ?>
-          <div id="logout">Sesión: <?php print $_SESSION['loginuser']['nombres']; ?> <a href="logout.php">Salir</a></div>
+<div class="container_16">
+  <div id="header">
+    <h1 id="logo"> <a href="/"><span>Alquiler de máquinas</span></a> </h1>
+    <?php include "menutop.php"; ?>
+    <?php if(isset($_SESSION['loginuser'])) : ?>
+    <div id="logout">Sesión: <?php print $_SESSION['loginuser']['nombres']; ?> <a href="logout.php">Salir</a></div>
+    <?php endif; ?>
+  </div>
+  <div class="clear"></div>
+  <div id="icon" class="grid_3">
+    <p class="align-center"><img src="images/maquina.png" alt="Máquinas" /></p>
+  </div>
+  <div id="content" class="grid_13">
+    <h1>Máquinas</h1>
+    <?php if (isset($msg)): ?>
+    <p class="<?php echo ($error) ? "error" : "msg" ?>"><?php print $msg; ?></p>
+    <?php endif; ?>
+    <form name="frmmaquina" id="frmmaquina" method="post" action="maquinas.php">
+      <fieldset class="collapsible">
+      <legend>Información de la máquina</legend>
+      <p>
+        <label for="descripcion">Descripción <span class="required">*</span>:</label>
+        <input type="text" name="descripcion" id="descripcion" maxlength="45" size="45" />
+      </p>
+      <p>
+        <label for="idoperador">Operador <span class="required">*</span>:</label>
+        <select name="idoperador" id="idlugar">
+          <option value="" selected="selected">Seleccione un operador</option>
+          <?php foreach ($operadores as $operador) : ?>
+          <option value="<?php print $operador['id']; ?>"><?php print $operador['nombres']; ?></option>
+          <?php endforeach; ?>
+        </select>
+      </p>
+      <p class="align-center">
+        <button type="submit" name="submit" id="submit">Guardar</button>
+      </p>
+      </fieldset>
+    </form>
+    <fieldset class="<?php if(!isset($_GET['PageIndex'])): ?>collapsibleClosed<?php else: ?>collapsible<?php endif; ?>">
+      <legend>Máquinas existentes</legend>
+      <p class="war">Las máquinas se pueden editar, sin embargo tenga cuidado al hacerlo ya que se pueden confundir datos existentes.</p>
+      <table>
+        <thead>
+          <tr>
+          <th>Máquina</th>
+          <th>Operador</th>
+          <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php if ($maquinas): ?>
+          <?php $alt = "even"; ?>
+          <?php foreach($maquinas as $k=> $maquina): ?>
+          <tr class="<?php print $alt ?>">
+            <th><span class="click" id="descripcion-<?php print $maquina['id']; ?>"><?php print $maquina['descripcion']; ?></span></td>
+            <td><span class="clicks" id="idoperador-<?php print $maquina['id']; ?>"><?php print get_var_from_item('nombres', $maquina['idoperador'], $bcdb->operador); ?></span></td>
+            <td><a href="ver-usomaquina.php?id_maquina=<?php print $maquina['id']; ?>">Ver reporte</a></td>
+            <?php $alt = ($alt == "even") ? "odd" : "even"; ?>
+          </tr>
+          <?php endforeach; ?>
+          <?php else: ?>
+          <tr class="<?php print $alt; ?>">
+            <td colspan="5">No existen datos</th>
+          </tr>
           <?php endif; ?>
-        </div>
-        <div class="clear"></div>
-        
-        <div id="icon" class="grid_3">
-        	<p class="align-center"><img src="images/maquina.png" alt="Máquinas" /></p>
-        </div>
-        <div id="content" class="grid_13">
-        	<h1>Máquinas</h1>
-            <?php if (isset($msg)): ?>
-            	<p class="<?php echo ($error) ? "error" : "msg" ?>"><?php print $msg; ?></p>
-            <?php endif; ?>
-            <form name="frmmaquina" id="frmmaquina" method="post" action="maquinas.php">
-            	<fieldset class="collapsible">
-                	<legend>Información de la máquina</legend>
-                    <p>
-                    	<label for="nombre">Nombre <span class="required">*</span>:</label>
-                        <input type="text" name="nombre" id="nombre" maxlength="200" size="45" />
-                    </p>
-                    <p>
-                    	<label for="uit">% UIT:</label>
-                        <input type="text" name="uit" id="uit" size="15" class="required number" />
-                    </p>
-                    <p>
-                    	<label for="tarifa">Tarifa S/. <span class="required">*</span>:</label>
-                        <input type="text" name="tarifa" id="tarifa" size="15" class="required number" />
-                    </p>
-                    <p>
-                    	<label>La tarifa se cobra por:</label>
-                        <input type="radio" name="tiempo" id="hora" value="H" checked="checked" /> <label for="hora">Hora</label>
-                        <input type="radio" name="tiempo" id="dia" value="D" /> <label for="dia">Día</label>
-                    </p>
-                    <p class="align-center">
-                    	<button type="submit" name="submit" id="submit">Guardar</button>
-                    </p>
-                </fieldset>
-            </form>
-            
-            <fieldset class="<?php if(!isset($_GET['PageIndex'])): ?>collapsibleClosed<?php else: ?>collapsible<?php endif; ?>">
-                <legend>Máquinas existentes</legend>
-                <p class="war">Las máquinas se pueden editar, sin embargo tenga cuidado al hacerlo ya que se pueden confundir datos existentes.</p>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Máquina</th>
-                            <th>% UIT</th>
-                            <th>Tarifa</th>
-                            <th>Cobrado por</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if ($maquinas): ?>
-                        <?php $alt = "even"; ?>
-                        <?php foreach($maquinas as $k=> $maquina): ?>
-                        <tr class="<?php print $alt ?>">
-                            <th><span class="click" id="nombre-<?php print $maquina['ID']; ?>"><?php print $maquina['nombre']; ?></span></td>
-                            <td><?php print $maquina['uit']; ?></td>
-                            <td><?php print $maquina['tarifa']; ?></td>
-                            <td><?php print ($maquina['tiempo']=='D') ? 'Día' : 'Hora'; ?></td>
-                            <td><a href="ver-usomaquina.php?id_maquina=<?php print $maquina['ID']; ?>">Ver reporte</a></td>
-                            <?php $alt = ($alt == "even") ? "odd" : "even"; ?>
-                        </tr>
-                        <?php endforeach; ?>
-                        <?php else: ?>
-                        <tr class="<?php print $alt; ?>">
-                            <td colspan="5">No existen datos</th>
-                        </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
-                <?php include "pager.php"; ?>
-            </fieldset>
-        </div>
-        <div class="clear"></div>
-        <?php include "footer.php"; ?>
-    </div>
+        </tbody>
+      </table>
+      <?php include "pager.php"; ?>
+    </fieldset>
+  </div>
+  <div class="clear"></div>
+  <?php include "footer.php"; ?>
+</div>
 </body>
 </html>

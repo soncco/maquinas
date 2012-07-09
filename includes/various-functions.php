@@ -407,21 +407,21 @@ function nuevos_soles($monto) {
 * @param int $minutos El número de minutos
 * @return array
 */
-function hora_quince($minutos) {
+function convierte_horas($minutos) {
 	$resta = 0;
 	$h = 0;
 	$time = array();
 	for($i=1; $i<=$minutos; $i++):
-		if($i%15 == 0) :
+		if($i%30 == 0) :
 			
 			if($i%60==0) :
 				$hora = ($i/60);
 				$h = $hora;
 				$resta = $hora*60;
-				$time[$i] = "$hora hor.";
+				$time[$i] = "$hora h";
 			endif;
 			
-			if($i%60!=0) $time[$i] = $h . " hor. " . ($i-$resta) . " min.";
+			if($i%60!=0) $time[$i] = $h . " h " . ($i-$resta) . " m";
 		endif;
 	endfor;
 	return $time;
@@ -451,12 +451,12 @@ function horas_minutos($minutos) {
 function save_user($idusuario, $user_values) {
 	global $bcdb, $msg;
 
-	if ( $idusuario && get_item($idusuario, $bcdb->usuarios) ) {
+	if ( $idusuario && get_item($idusuario, $bcdb->admin) ) {
 		unset($user_values['usuario']); // We don't want someone 'accidentally' update usuario
 	}		
 	
 	$user_values['id'] = $idusuario;
-	if ( ($query = insert_update_query($bcdb->usuarios, $user_values)) &&
+	if ( ($query = insert_update_query($bcdb->admin, $user_values)) &&
 		$bcdb->query($query) ) {
 		if (empty($idusuario))	
 			$idusuario = $bcdb->insert_id;
@@ -472,10 +472,10 @@ function save_user($idusuario, $user_values) {
 * @param string $palabra El texto a buscar
 * @return array
 */
-function search_pagadores($palabra) {
+function search_clientes($palabra) {
 	global $bcdb;
-
-	$sql = "SELECT * FROM $bcdb->pagadores WHERE nombres LIKE '%$palabra%'";
+	$sql = "SELECT * FROM $bcdb->cliente WHERE nombres LIKE '%$palabra%' 
+          OR apaterno LIKE '%$palabra%' OR amaterno LIKE '%$palabra%'";
 	return $bcdb->get_results($sql);
 }
 
@@ -486,9 +486,7 @@ function search_pagadores($palabra) {
 * @return boolean
 */
 function is_admin ($idusuario) {
-	global $bcdb;
-	$a = $bcdb->get_var("SELECT tipo FROM $bcdb->usuarios WHERE ID = $idusuario");
-	return ($a=="1");
+	return true;
 }
 
 ?>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Registra un nuevo pagador
+ * Registra un nuevo cliente.
  */
 	require_once('home.php');
 	require_once('redirect.php');
@@ -9,22 +9,24 @@
 	$error = false;
 	// Si es que el formulario se ha enviado
 	if($postback) :
-		$pagador = array(
+		$cliente = array(
 			'nombres' => $_POST['nombres'],
-			'documento' => $_POST['documento']);
+      'apaterno' => $_POST['apaterno'],
+      'amaterno' => $_POST['amaterno'],
+			'dni' => $_POST['dni']);
 		
 		// Verificación
-		if (empty($pagador['nombres'])) :
+		if (empty($cliente['nombres']) || empty($cliente['apaterno']) || empty($cliente['amaterno'])) :
 			$error = true;
 			$msg = "Ingrese la información obligatoria.";
 		else :
 		
-			$pagador = array_map('strip_tags', $pagador);
+			$cliente = array_map('strip_tags', $cliente);
 			// Guarda el pagador
-			$id = save_item(0, $pagador, $bcdb->pagadores);
+			$id = save_item(0, $cliente, $bcdb->cliente);
 			
 			if($id) :
-				safe_redirect("recibos.php", "js");
+				safe_redirect("alquiler.php", "js");
 				$msg = "La información se guardó correctamente.";
 				exit();
 			else:
@@ -50,24 +52,32 @@
 		$('#nombres').focus();
 	});
 </script>
-<title>Rubros | Sistema de Caja</title>
+<title>Rubros | Alquiler de máquinas</title>
 </head>
 
 <body class="single">
-    <h1>Nuevo Pagador</h1>
+    <h1>Nuevo Cliente</h1>
     <?php if (isset($msg)): ?>
         <p class="<?php echo ($error) ? "error" : "msg" ?>"><?php print $msg; ?></p>
     <?php endif; ?>
-    <form name="frmrecibo" id="frmrecibo" method="post" action="pagador.php">
+    <form name="frmcliente" id="frmcliente" method="post" action="cliente.php">
         <fieldset>
-            <legend>Información del pagador</legend>
+            <legend>Información del cliente</legend>
             <p>
                 <label for="nombres">Nombres <span class="required">*</span>:</label>
-                <input type="text" name="nombres" id="nombres" maxlength="255" size="40" />
+                <input type="text" name="nombres" id="nombres" maxlength="45" size="40" />
             </p>
             <p>
-                <label for="documento">Documento:</label>
-                <input type="text" name="documento" id="documento" maxlength="11" size="20" />
+                <label for="apaterno">A. Paterno <span class="required">*</span>:</label>
+                <input type="text" name="apaterno" id="apaterno" maxlength="45" size="40" />
+            </p>
+            <p>
+                <label for="amaterno">A. Materno <span class="required">*</span>:</label>
+                <input type="text" name="amaterno" id="amaterno" maxlength="45" size="40" />
+            </p>
+            <p>
+                <label for="dni">Documento:</label>
+                <input type="text" name="dni" id="dni" maxlength="11" size="20" />
             </p>
             <p class="align-center">
                 <button type="submit" name="submit" id="submit">Guardar</button>

@@ -1,10 +1,10 @@
 <?php
 /**
- * Verificación de permisos
- * También revisa si es que la sesión es activa, si no es así envía a la página de login
+ * VerificaciÃ³n de permisos
+ * TambiÃ©n revisa si es que la sesiï¿½n es activa, si no es asÃ­, envÃ­a a la pÃ¡gina de login
  */
  
-// Páginas permitidas a los que no son administradores
+// PÃ¡ginas permitidas a los que no son administradores
 $allowed = array(
 	 "/",
 	 "/index.php",
@@ -20,14 +20,14 @@ $allowed = array(
 	 "/print-per.php"
  );
  
-// Redirección al login
+// RedirecciÃ³n al login
 if(!isset($session_active)) {
 	header("Location: ". BASE_URL . "login.php?r=" . $_SERVER['PHP_SELF']);
 	exit();
 }
 
 // Error
-if(!is_admin($_SESSION['loginuser']['ID'])) {
+if(!is_admin($_SESSION['loginuser']['id'])) {
 	if(!in_array($_SERVER['PHP_SELF'], $allowed)) {
 		header("Location: ". BASE_URL . "error.php");
 		exit();

@@ -8,15 +8,15 @@ include_once(INCLUDE_PATH . 'ez_sql.php');
 
 # Tablas
 $table_prefix = "";
-$bcdb->rubros				= $table_prefix . 'rubros';
-$bcdb->pagadores			= $table_prefix . 'pagadores';
-$bcdb->recibos				= $table_prefix . 'recibos';
-$bcdb->internos				= $table_prefix . 'internos';
-$bcdb->externos				= $table_prefix . 'externos';
-$bcdb->maquinas				= $table_prefix . 'maquinas';
-$bcdb->alquileres			= $table_prefix . 'alquileres';
-$bcdb->opciones				= $table_prefix . 'opciones';
-$bcdb->admin  				= $table_prefix . 'admin';
+$bcdb->alquiler       = $table_prefix . 'alquiler';
+$bcdb->cliente        = $table_prefix . 'cliente';
+$bcdb->combustible    = $table_prefix . 'combustible';
+$bcdb->lugar          = $table_prefix . 'lugar';
+$bcdb->mantenimiento  = $table_prefix . 'mantenimiento';
+$bcdb->maquina        = $table_prefix . 'maquina';
+$bcdb->operador       = $table_prefix . 'operador';
+$bcdb->opciones       = $table_prefix . 'opciones';
+$bcdb->admin          = $table_prefix . 'admin';
 
 # Funciones independientes
 include_once(INCLUDE_PATH . 'formatting-functions.php');
@@ -25,6 +25,7 @@ include_once(INCLUDE_PATH . 'user-functions.php');
 include_once(INCLUDE_PATH . 'item-functions.php');
 include_once(INCLUDE_PATH . 'various-functions.php');
 include_once(INCLUDE_PATH . 'numbertotext.php');
+include_once(INCLUDE_PATH . 'krumo/class.krumo.php');
 
 # Iniciamos
 send_headers();

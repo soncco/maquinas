@@ -1,6 +1,6 @@
 <?php
 /**
- * Si la sesión existe envía al inicio
+ * Si la sesiÃ³n existe envÃ­a al inicio
  */
 require_once('init.php');
 

@@ -10,10 +10,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="stylesheet" type="text/css" media="screen" href="/css/reset.css" /> 
-<link rel="stylesheet" type="text/css" media="screen" href="/css/text.css" /> 
-<link rel="stylesheet" type="text/css" media="screen" href="/css/960.css" /> 
-<link rel="stylesheet" type="text/css" media="screen" href="/css/layout.css" /> 
+<link rel="stylesheet" type="text/css" media="screen" href="/css/reset.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="/css/text.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="/css/960.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="/css/layout.css" />
 <link href="/favicon.ico" type="image/ico" rel="shortcut icon" />
 <script type="text/javascript" src="/scripts/jquery-1.3.2.min.js"></script>
 <script type="text/javascript" src="/scripts/jquery.collapsible.js"></script>
@@ -26,42 +26,33 @@
 		});
 	});
 </script>
-<title>Opciones | Sistema de Caja</title>
+<title>Opciones | Alquiler de máquinas</title>
 </head>
 
 <body>
-	<div class="container_16">
-   	  <div id="header">
-       	<h1 id="logo"> <a href="/"><span>Sistema de Caja</span></a> </h1>
-<?php include "menutop.php"; ?>
-          <?php if(isset($_SESSION['loginuser'])) : ?>
-          <div id="logout">Sesión: <?php print $_SESSION['loginuser']['nombres']; ?> <a href="logout.php">Salir</a></div>
-          <?php endif; ?>
-        </div>
-        <div class="clear"></div>
-        
-        <div id="icon" class="grid_3">
-        	<p class="align-center"><img src="images/opciones.png" alt="Opciones" /></p>
-        </div>
-        <div id="content" class="grid_13">
-        	<h1>Opciones</h1>
-            <fieldset class="collapsible">
-                <legend>Opciones de Maquinaria</legend>
-                <p>
-                    <label for="rubro_maquinaria">ID del rubro "Alquiler de Maquinarias":</label>
-                    <span class="click" id="rubro_maquinaria"><?php print get_option('rubro_maquinaria'); ?></span>
-                </p>
-                <p>
-                    <label for="limite_dia">Límite de horas que se alquila una máquina por sesión:</label>
-                    <span class="click" id="limite_dia"><?php print get_option('limite_dia'); ?></span>
-                </p>
-                <p>
-                    <label for="limite_dia">Límite de horas que se alquila una máquina por año:</label>
-                    <span class="click" id="limite_anio"><?php print get_option('limite_anio'); ?></span>
-                </p>
-            </fieldset>
-        </div><div class="clear"></div>
-        <?php include "footer.php"; ?>
-    </div>
+<div class="container_16">
+  <div id="header">
+    <h1 id="logo"> <a href="/"><span>Alquiler de máquinas</span></a> </h1>
+    <?php include "menutop.php"; ?>
+    <?php if(isset($_SESSION['loginuser'])) : ?>
+    <div id="logout">Sesión: <?php print $_SESSION['loginuser']['nombres']; ?> <a href="logout.php">Salir</a></div>
+    <?php endif; ?>
+  </div>
+  <div class="clear"></div>
+  <div id="icon" class="grid_3">
+    <p class="align-center"><img src="images/opciones.png" alt="Opciones" /></p>
+  </div>
+  <div id="content" class="grid_13">
+    <h1>Opciones</h1>
+    <fieldset class="collapsible">
+      <legend>Opciones del sistema</legend>
+      <p>
+        <label for="limite_dia">Límite de horas que se alquila una máquina por día:</label>
+        <span class="click" id="limite_dia"><?php print get_option('limite_dia'); ?></span> </p>
+    </fieldset>
+  </div>
+  <div class="clear"></div>
+  <?php include "footer.php"; ?>
+</div>
 </body>
 </html>

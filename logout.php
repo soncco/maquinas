@@ -27,31 +27,30 @@ session_destroy();
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="stylesheet" type="text/css" media="screen" href="/css/reset.css" /> 
-<link rel="stylesheet" type="text/css" media="screen" href="/css/text.css" /> 
-<link rel="stylesheet" type="text/css" media="screen" href="/css/960.css" /> 
-<link rel="stylesheet" type="text/css" media="screen" href="/css/layout.css" /> 
+<link rel="stylesheet" type="text/css" media="screen" href="/css/reset.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="/css/text.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="/css/960.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="/css/layout.css" />
 <link href="/favicon.ico" type="image/ico" rel="shortcut icon" />
-<title>Sistema de Caja</title>
+<title>Alquiler de máquinas</title>
 </head>
 
 <body>
-	<div class="container_16">
-   	  <div id="header">
-       	<h1 id="logo"> <a href="/"><span>Sistema de Caja</span></a> </h1>
-          <?php include "menutop.php"; ?>
-        </div>
-        <div class="clear"></div>
-        
-        <div id="icon" class="grid_3">
-        	<p class="align-center"><img src="images/login.png" alt="Login" /></p>
-        </div>
-        <div id="content" class="grid_13">
-        	<h1>Hasta Pronto</h1>
-            <p>Si deseas ingresar nuevamente <a href="/">usa el formulario de ingreso</a>.</p>
-        </div>
-        <div class="clear"></div>
-        <?php include "footer.php"; ?>
-    </div>
+<div class="container_16">
+  <div id="header">
+    <h1 id="logo"> <a href="/"><span>Alquiler de máquinas</span></a> </h1>
+    <?php include "menutop.php"; ?>
+  </div>
+  <div class="clear"></div>
+  <div id="icon" class="grid_3">
+    <p class="align-center"><img src="images/login.png" alt="Login" /></p>
+  </div>
+  <div id="content" class="grid_13">
+    <h1>Hasta Pronto</h1>
+    <p>Si deseas ingresar nuevamente <a href="/">usa el formulario de ingreso</a>.</p>
+  </div>
+  <div class="clear"></div>
+  <?php include "footer.php"; ?>
+</div>
 </body>
 </html>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Modifica los valores de un rubro
+ * Modifica los valores de un operador
  */
 	require_once('home.php');
 	require_once('redirect.php');
@@ -16,8 +16,8 @@
 	$value = $_POST['value'];
 	
 	// Actualizamos
-	$bcdb->query("UPDATE $bcdb->rubros SET $field = '$value' WHERE ID = '$id'");
+	$bcdb->query("UPDATE $bcdb->operador SET $field = '$value' WHERE id = '$id'");
 	
 	// Escribimos
-	print $bcdb->get_var("SELECT $field FROM $bcdb->rubros WHERE ID = '$id'");
+	print $bcdb->get_var("SELECT $field FROM $bcdb->operador WHERE id = '$id'");
 ?>

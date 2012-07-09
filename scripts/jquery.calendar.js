@@ -15,8 +15,8 @@ jQuery(function($){
 		dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','S&aacute;'],
 		dayStatus: 'DD', dateStatus: 'D, M d',
 		dateFormat: 'yy-mm-dd', firstDay: 0, 
-		initStatus: '', isRTL: false,
-		maxDate: '0D'
+		initStatus: '', isRTL: false
+		//maxDate: '0D'
 		};
 	$.datepicker.setDefaults($.datepicker.regional['es']);
 });

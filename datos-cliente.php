@@ -1,6 +1,6 @@
 <?php
 /**
- * Modifica los valores de un pagador
+ * Modifica los valores de un cliente
  */
 	require_once('home.php');
 	require_once('redirect.php');
@@ -16,8 +16,8 @@
 	$value = $_POST['value'];
 	
 	// Actualizamos
-	$bcdb->query("UPDATE $bcdb->pagadores SET $field = '$value' WHERE ID = '$id'");
+	$bcdb->query("UPDATE $bcdb->cliente SET $field = '$value' WHERE id = '$id'");
 	
 	// Escribimos
-	print $bcdb->get_var("SELECT $field FROM $bcdb->pagadores WHERE ID = '$id'");
+	print $bcdb->get_var("SELECT $field FROM $bcdb->cliente WHERE id = '$id'");
 ?>
