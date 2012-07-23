@@ -1,26 +1,44 @@
 <?php
 /**
- * Registra Clientes
+ * Registra Lugares
  */
 	require_once('home.php');
 	require_once('redirect.php');
 	
 	$postback = isset($_POST['submit']);
 	$error = false;
-	
-	// Trae los clientes.
-	
-	$buscar = isset($_GET['buscar']);
-	if($buscar):
-		$palabra = trim($_GET['s']);
-		$clientes = search_clientes($palabra);
-	else:
-		$pager = true;
-		$clientes = get_items($bcdb->cliente, "apaterno");
-		// Paginación
-		$results = @$bcrs->get_navigation();
+	// Si es que el formulario se ha enviado
+	if($postback) :
+		$lugar = array(
+			'nombre' => $_POST['nombre'],
+    );
+		
+		// Verificación
+		if (empty($lugar['nombre'])) :
+			$error = true;
+			$msg = "Ingrese la información obligatoria.";
+		else :
+		
+			$lugar = array_map('strip_tags', $lugar);
+			// Guarda el lugar
+			$id = save_item(0, $lugar, $bcdb->lugar);
+			
+			if($id) :
+				$msg = "La información se guardó correctamente.";
+			else:
+				$error = true;
+				$msg = "Hubo un error al guardar la información, intente nuevamente.";
+			endif;
+		endif;
 	endif;
 	
+	// Trae los lugares
+	$pager = true;
+	$lugares = get_items($bcdb->lugar);
+	
+	// Paginación
+	
+	$results = @$bcrs->get_navigation();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -32,17 +50,18 @@
 <link rel="stylesheet" type="text/css" media="screen" href="/css/layout.css" />
 <link href="/favicon.ico" type="image/ico" rel="shortcut icon" />
 <script type="text/javascript" src="/scripts/jquery-1.3.2.min.js"></script>
-<script type="text/javascript" src="/scripts/jquery.jeditable.js"></script>
 <script type="text/javascript" src="/scripts/jquery.collapsible.js"></script>
+<script type="text/javascript" src="/scripts/jquery.jeditable.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
-		$(".click").editable("/datos-cliente.php", {
+		$('#nombre').focus();		
+		$(".click").editable("/datos-lugares.php", {
 			indicator : "Guardando...",
 			tooltip   : "Click para editar..."
 		});
 	});
 </script>
-<title>Clientes | Alquiler de máquinas</title>
+<title>Lugares | Alquiler de máquinas</title>
 </head>
 
 <body>
@@ -56,57 +75,48 @@
   </div>
   <div class="clear"></div>
   <div id="icon" class="grid_3">
-    <p class="align-center"><img src="images/clients.png" alt="Pagadores" /></p>
+    <p class="align-center"><img src="images/rubros.png" alt="Rubros" /></p>
   </div>
   <div id="content" class="grid_13">
-    <h1>Clientes</h1>
+    <h1>Lugares</h1>
     <?php if (isset($msg)): ?>
     <p class="<?php echo ($error) ? "error" : "msg" ?>"><?php print $msg; ?></p>
     <?php endif; ?>
-    <form name="search" id="search" method="get" action="clientes.php">
-      <fieldset <?php if(!$buscar): ?>class="collapsibleClosed"<?php endif; ?>>
-        <legend>Buscar cliente</legend>
+    <form name="frmlugares" id="frmlugares" method="post" action="lugares.php">
+      <fieldset class="collapsible">
+        <legend>Información del lugar</legend>
         <p>
-          <label for="s">Buscar por nombres o apellidos:</label>
-          <input type="text" name="s" id="s" <?php if($buscar): ?>value="<?php print $palabra; ?>"<?php endif; ?> />
-          <button name="buscar" id="buscar" type="submit">Buscar</button>
+          <label for="nombre">Lugar: <span class="required">*</span>:</label>
+          <input type="text" name="nombre" id="nombre" maxlength="45" size="40" />
+        </p>
+        <p class="align-center">
+          <button type="submit" name="submit" id="submit">Guardar</button>
         </p>
       </fieldset>
     </form>
-    <fieldset>
-      <legend>Lista de clientes</legend>
-      <p class="war">Los clientes se pueden editar, sin embargo tenga cuidado al hacerlo ya que se pueden confundir datos existentes.</p>
+    <fieldset class="<?php if(!isset($_GET['PageIndex'])): ?>collapsibleClosed<?php else: ?>collapsible<?php endif; ?>">
+      <legend>Lugares existentes</legend>
+      <p class="war">Los lugares se pueden editar, sin embargo tenga cuidado al hacerlo ya que se pueden confundir datos existentes.</p>
       <table>
-        <?php if($buscar): ?>
-        <caption>
-        Mostrando resultados con: "<?php print $palabra; ?>"
-        </caption>
-        <?php endif; ?>
         <thead>
           <tr>
-            <th>Documento</th>
-            <th>Nombres</th>
-            <th>Paterno</th>
-            <th>Materno</th>
-            <th>Acciones</th>
+            <th>Identificador</th>
+            <th>Lugar</th>
           </tr>
         </thead>
         <tbody>
-          <?php if ($clientes): ?>
+          <?php if ($lugares): ?>
           <?php $alt = "even"; ?>
-          <?php foreach($clientes as $k=> $cliente): ?>
+          <?php foreach($lugares as $k=> $lugar): ?>
           <tr class="<?php print $alt ?>">
-            <th><span class="click" id="dni-<?php print $cliente['id']; ?>"><?php print $cliente['dni']; ?></span></th>
-            <td><span class="click" id="nombres-<?php print $cliente['id']; ?>"><?php print $cliente['nombres']; ?></span></td>
-            <td><span class="click" id="apaterno-<?php print $cliente['id']; ?>"><?php print $cliente['apaterno']; ?></span></td>
-            <td><span class="click" id="amaterno-<?php print $cliente['id']; ?>"><?php print $cliente['amaterno']; ?></span></td>
-            <td><a href="ver-pagos.php?idcliente=<?php print $cliente['id']; ?>">Ver pagos</a></td>
+            <th><?php print $lugar['id']; ?></th>
+            <th><span class="click" id="nombre-<?php print $lugar['id']; ?>"><?php print $lugar['nombre']; ?></span></th>
             <?php $alt = ($alt == "even") ? "odd" : "even"; ?>
           </tr>
           <?php endforeach; ?>
           <?php else: ?>
           <tr class="<?php print $alt; ?>">
-            <th colspan="5">No existen datos</th>
+            <th colspan="2">No existen datos</th>
           </tr>
           <?php endif; ?>
         </tbody>

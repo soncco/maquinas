@@ -58,7 +58,7 @@ function update_query($table, $params, $condition) {
 		if (!empty($condition))
 			$query_fmt .= ' WHERE %s';
 		elseif ($condition !== false)		
-			die("No hay una condición para hacer el update");
+			die("No hay una condiciï¿½n para hacer el update");
 			
 		$query = @sprintf($query_fmt, $table, $update, $condition);
 		
@@ -157,6 +157,4 @@ function deb($a) {
 	echo "</pre>";
 	exit();
 }
-
-
 ?>

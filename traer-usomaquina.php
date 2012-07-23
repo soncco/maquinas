@@ -15,7 +15,7 @@
 	
 ?>
 <table>
-    <caption>Reporte de la máquina <strong><?php print get_var_from_item("nombre", $id_maquina, $bcdb->maquinas); ?></strong></caption>
+    <caption>Reporte de la máquina <strong><?php print get_var_from_item("descripcion", $id_maquina, $bcdb->maquina); ?></strong></caption>
     <thead>
         <tr>
             <th>Nro.</th>
@@ -29,13 +29,13 @@
         <?php if ($data['alquileres']): ?>
         <?php $alt = "even"; ?>
         <?php foreach($data['alquileres'] as $k=> $alquiler): ?>
-		<?php if ($alquiler['horas'] == 0) $alt = "error"; ?>
+		<?php if ($alquiler['minutos'] == 0) $alt = "error"; ?>
         <tr class="<?php print $alt ?>">
             <th><?php print $k+1; ?></th>
             <td><?php print strftime("%d %b %Y", strtotime($alquiler['fecha'])); ?></td>
             <td><?php print $alquiler['nombres']; ?></td>
-            <td><?php print ($alquiler['horas'] > 0) ? horas_minutos($alquiler['horas']) : "ANULADO"; ?></td>
-            <td><a href="ver-recibos.php?ID=<?php print $alquiler['id_recibo']; ?>">detalles</a></td>
+            <td><?php print ($alquiler['minutos'] > 0) ? horas_minutos($alquiler['minutos']) : "ANULADO"; ?></td>
+            <td><a href="ver-recibos.php?id=<?php print $alquiler['id_alquiler']; ?>">detalles</a></td>
             <?php $alt = ($alt == "even") ? "odd" : "even"; ?>
         </tr>
         <?php endforeach; ?>

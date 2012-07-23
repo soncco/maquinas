@@ -18,7 +18,10 @@
 			'idlugar' => $_POST['idlugar'],
 			'idmaquina' => $_POST['idmaquina'],
 			'minutos' => $_POST['minutos'],
+			'combustiblenro' => $_POST['combustiblenro'],
+			'combustiblecan' => $_POST['combustiblecan'],
       'observaciones' => $_POST['observaciones'],
+      'creado' => strftime("%Y-%m-%d %H:%M:%S", time())
 		);
 		/**
 		  * Verificación
@@ -32,23 +35,43 @@
             empty($alquiler['idlugar']) ||
             empty($alquiler['idmaquina']) ||
             empty($alquiler['minutos']) ||
+            empty($alquiler['combustiblenro']) ||
+            empty($alquiler['combustiblecan']) ||
             empty($alquiler['observaciones'])) :
 			$error = true;
 			$msg = "Ingrese la información obligatoria.";
 		else :
 			if(!$error) :
 				$alquiler = array_map('strip_tags', $alquiler);
-				// Guarda el alquiler
-				$id = save_item(0, $alquiler, $bcdb->alquiler);
-				
-				if($id) :
-					$msg = "La información se guardó correctamente.";
-					//safe_redirect("ver-recibos.php?ID=$id&saved=1");
-					exit();
-				else:
-					$error = true;
-					$msg = "Hubo un error al guardar la información, intente nuevamente.";
-				endif;
+        $limite_dia = get_option('limite_dia');
+        // Verifica si se puede alquilar.
+        $horas = 0;
+        $alquileres = get_reservas_dia($alquiler['fecha']);
+        
+        if ($alquileres):
+          foreach ($alquileres as $pasados) {
+            if ($pasados['idmaquina'] == $alquiler['maquina'])
+              $horas += $pasados['minutos'];
+          }
+          echo $horas;
+        endif;
+        if ($horas + $alquiler['minutos'] > ($limite_dia*60)) :
+          $error = true;
+          $msg = sprintf("El límite de horas es %s horas. El día <strong>%s</strong> sólo tiene <strong>%s</strong> disponibles.",
+                  $limite_dia, strftime('%d-%m-%Y', strtotime($alquiler['fecha'])), horas_minutos($limite_dia*60-$horas));
+        else :
+          // Guarda el alquiler.
+          $id = save_item(0, $alquiler, $bcdb->alquiler);
+
+          if($id) :
+            $msg = "La información se guardó correctamente.";
+            safe_redirect("ver-recibos.php?id=$id&saved=1");
+            exit();
+          else:
+            $error = true;
+            $msg = "Hubo un error al guardar la información, intente nuevamente.";
+          endif;
+        endif;
 			endif;
 		endif;
 	endif; // End Postback.
@@ -109,7 +132,7 @@
 		/**
 		 * Varios
 		 */	
-		$('#fecha').focus();
+		$('#cliente').focus();
 	});
 </script>
 <title>Alquileres | Alquiler de máquinas</title>
@@ -139,15 +162,15 @@
         <fieldset>
           <legend>Datos del alquiler</legend>
           <p>
-            <label for="fecha">Fecha: <span class="required">*</span>:</label>
-            <input type="text" name="fecha" id="fecha" size="20" class="date" />
-            <label for="recibo">Recibo de caja: <span class="required">*</span></label>
-            <input type="text" name="recibo" id="recibo" size="10" maxlength="20" />
-          </p>
-          <p>
             <label for="cliente">Cliente: <span class="required">*</span>:</label>
             <input type="text" name="cliente" id="cliente" size="60" />
             <a href="cliente.php?placeValuesBeforeTB_=savedValues&TB_iframe=true&width=480&height=320&modal=true" class="thickbox">Agregar Nuevo</a>
+          </p>
+          <p>
+            <label for="fecha">Para la fecha: <span class="required">*</span>:</label>
+            <input type="text" name="fecha" id="fecha" size="20" class="date" />
+            <label for="recibo">Recibo de caja: <span class="required">*</span></label>
+            <input type="text" name="recibo" id="recibo" size="10" maxlength="20" />
           </p>
           <p>
             <label for="idlugar">Sector o comunidad: <span class="required">*</span></label>
@@ -174,6 +197,12 @@
               <option value="<?php print $k; ?>"><?php print $v; ?></option>
               <?php endforeach; ?>
             </select> 
+          </p>
+          <p>
+            <label for="combustiblenro">Vale de combustible Nro: <span class="required">*</span>:</label>
+            <input type="text" name="combustiblenro" id="combustiblenro" size="10" />
+            <label for="combustiblecan">Cantidad de combustible: <span class="required">*</span>:</label>
+            <input type="text" name="combustiblecan" id="combustiblecan" size="5" /> galones
           </p>
           <p>
             <label for="observaciones">Observaciones:</label><br />&nbsp;

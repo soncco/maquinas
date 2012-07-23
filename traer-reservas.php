@@ -8,7 +8,7 @@
 	
 	$fecha = $_POST['fecha'];
 	
-	$data = get_recibos_dia($fecha);
+	$data = get_reservas_dia($fecha);
 	
 ?>
 <table>

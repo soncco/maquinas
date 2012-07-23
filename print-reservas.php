@@ -58,8 +58,8 @@ class PDF extends FPDF {
 			foreach($data as $k =>$v) :
 				$this->Cell($hl);
 				$this->Cell($w[0], $h, $v['id'], 'LRB', 0, 'R');
-				$this->Cell($w[1], $h, utf8_decode($v['maquina']), 'LRB');
-				$this->Cell($w[2], $h, utf8_decode($v['lugar']), 'LRB');
+				$this->Cell($w[1], $h, $v['maquina'], 'LRB');
+				$this->Cell($w[2], $h, $v['lugar'], 'LRB');
 				$this->Cell($w[3], $h, ($v['anulado']) ? "ANULADO" : utf8_decode(sprintf('%s %s %s', $v['nombres'], $v['apaterno'], $v['amaterno'])), 'LRB', 0);
 				$this->Cell($w[4], $h, horas_minutos($v['minutos']),'LRB');
 				$this->Ln();

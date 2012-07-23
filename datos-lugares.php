@@ -1,6 +1,6 @@
 <?php
 /**
- * Modifica los valores de un cliente
+ * Modifica los valores de un lugar
  */
 	require_once('home.php');
 	require_once('redirect.php');
@@ -16,8 +16,8 @@
 	$value = $_POST['value'];
 	
 	// Actualizamos
-	$bcdb->query("UPDATE $bcdb->cliente SET $field = '$value' WHERE id = '$id'");
+	$bcdb->query("UPDATE $bcdb->lugar SET $field = '$value' WHERE id = '$id'");
 	
 	// Escribimos
-	print $bcdb->get_var("SELECT $field FROM $bcdb->cliente WHERE id = '$id'");
+	print $bcdb->get_var("SELECT $field FROM $bcdb->lugar WHERE id = '$id'");
 ?>

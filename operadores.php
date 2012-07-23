@@ -1,6 +1,6 @@
 <?php
 /**
- * Registra Rubros
+ * Registra Operadores
  */
 	require_once('home.php');
 	require_once('redirect.php');
@@ -20,7 +20,7 @@
 		else :
 		
 			$operador = array_map('strip_tags', $operador);
-			// Guarda el rubro
+			// Guarda el operador
 			$id = save_item(0, $operador, $bcdb->operador);
 			
 			if($id) :
