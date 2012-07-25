@@ -62,7 +62,7 @@ class PDF extends FPDF {
 				$this->Cell($w[2], $h, utf8_decode($v['lugar']), 'LRB');
 				$this->Cell($w[3], $h, ($v['anulado']) ? "ANULADO" : utf8_decode(sprintf('%s %s %s', $v['nombres'], $v['apaterno'], $v['amaterno'])), 'LRB', 0);
 				$this->Cell($w[4], $h, horas_minutos($v['minutos']),'LRB');
-				$this->Cell($w[5], $h, strftime('%d/%m/%Y', strtotime($recibo['fecha'])) ,'LRB');
+				$this->Cell($w[5], $h, strftime('%d/%m/%Y', strtotime($v['fecha'])) ,'LRB');
 				$this->Ln();
 			endforeach;
 		else:
