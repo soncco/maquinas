@@ -35,7 +35,8 @@ function get_recibos_dia($fecha) {
 * @return array
 */
 function get_reservas_dia($fecha) {
-	global $bcdb;
+  global $bcdb;
+  $fecha = strftime("%Y-%m-%d", strtotime($_POST['fecha']));
   $sql = sprintf("SELECT a.*, c.nombres, c.apaterno, c.amaterno, l.nombre as lugar, m.descripcion as maquina
                 FROM %s a
                 INNER JOIN %s c

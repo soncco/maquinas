@@ -28,7 +28,6 @@
 		  */
 		  
 		// Todo
-		
 		if (empty($alquiler['fecha']) ||
             empty($alquiler['recibo']) ||
             empty($alquiler['idcliente']) ||
@@ -36,8 +35,7 @@
             empty($alquiler['idmaquina']) ||
             empty($alquiler['minutos']) ||
             empty($alquiler['combustiblenro']) ||
-            empty($alquiler['combustiblecan']) ||
-            empty($alquiler['observaciones'])) :
+            empty($alquiler['combustiblecan'])) :
 			$error = true;
 			$msg = "Ingrese la información obligatoria.";
 		else :
@@ -48,9 +46,9 @@
         $horas = 0;
         $alquileres = get_reservas_dia($alquiler['fecha']);
         
-        if ($alquileres):
+        if (count($alquileres) > 0):
           foreach ($alquileres as $pasados) {
-            if ($pasados['idmaquina'] == $alquiler['maquina'])
+            if ($pasados['idmaquina'] == $alquiler['idmaquina'])
               $horas += $pasados['minutos'];
           }
           echo $horas;
