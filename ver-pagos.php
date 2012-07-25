@@ -6,15 +6,10 @@
 	require_once('redirect.php');
 	
 	
-	$id_pagador = $_GET['id_pagador'];
+	$id_pagador = $_GET['idcliente'];
 	
-	$id_rubro = isset($_GET['id_rubro']) ? trim($_GET['id_rubro']) : 0;
-	
-	if ($id_rubro > 0) :
-		$data = get_recibos_pagador_rubro($id_pagador, $id_rubro);
-	else :
-		$data = get_recibos_pagador($id_pagador);
-	endif;
+	$data = get_recibos_pagador($id_pagador);
+
 	
 	// Trae las rubros
 	$rubros = get_items($bcdb->rubros);
