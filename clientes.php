@@ -100,7 +100,7 @@
             <td><span class="click" id="nombres-<?php print $cliente['id']; ?>"><?php print $cliente['nombres']; ?></span></td>
             <td><span class="click" id="apaterno-<?php print $cliente['id']; ?>"><?php print $cliente['apaterno']; ?></span></td>
             <td><span class="click" id="amaterno-<?php print $cliente['id']; ?>"><?php print $cliente['amaterno']; ?></span></td>
-            <td><a href="ver-pagos.php?idcliente=<?php print $cliente['id']; ?>">Ver pagos</a></td>
+            <td><a href="ver-pagos.php?idcliente=<?php print $cliente['id']; ?>">Ver alquileres</a></td>
             <?php $alt = ($alt == "even") ? "odd" : "even"; ?>
           </tr>
           <?php endforeach; ?>

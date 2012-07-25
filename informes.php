@@ -12,6 +12,9 @@
 
 	// Trae las máquinas.
 	$maquinas = get_items($bcdb->maquina);
+  
+  // Lugares.
+  $lugares = get_items($bcdb->lugar);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -67,7 +70,7 @@
 			 });
 		});
     
-    // Muestra los alquileres de cierta fecha
+    // Muestra los reportes de reservas.
 		$('#change-reservas').bind('click', function(){
 			$(this).after(simg);
 			var fecha = $("#fecha-reservas").val();
@@ -83,6 +86,42 @@
 			   }
 			 });
 		});
+    
+    // Muestra el reporte de combustible.
+		$('#change-combustible').bind('click', function(){
+			$(this).after(simg);
+			var fechai = $("#fecha-inicial-c").val();
+      var fechaf = $("#fecha-final-c").val();
+			$.ajax({
+			   type: "POST",
+			   url: "traer-combustible.php",
+			   data: "fechai=" + fechai + "&fechaf=" + fechaf,
+			   success: function(msg){
+          $('#combustible-results').empty();
+          $('#combustible-results').append(msg);
+          $('#simg').remove();
+			   }
+			 });
+		});
+    
+    // Muestra disponibilidad.
+		$('#change-disponible').bind('click', function(){
+			$(this).after(simg);
+			var fechai = $("#fecha-inicial-d").val();
+      var fechaf = $("#fecha-final-d").val();
+      var idlugar = $("#idlugar").val();
+			$.ajax({
+			   type: "POST",
+			   url: "traer-disponible.php",
+			   data: "fechai=" + fechai + "&fechaf=" + fechaf + "&idlugar=" + idlugar,
+			   success: function(msg){
+          $('#disponible-results').empty();
+          $('#disponible-results').append(msg);
+          $('#simg').remove();
+			   }
+			 });
+		});
+    
 	});
 </script>
 <title>Informes | Alquiler de máquinas</title>
@@ -109,10 +148,12 @@
     <ul class="i-tabs">
       <li><a href="#i-diario">Diario</a></li>
       <li><a href="#i-reservas">Reservas</a></li>
+      <li><a href="#i-combustible">Combustible</a></li>      
+      <li><a href="#i-disponible">Disponibilidad</a></li>      
     </ul>
     <div class="i-tab-container">
       <div id="i-diario" class="i-tab-content">
-        <p class="msg">Este es el reporte diario de alquileres.</p>
+        <p>Este es el reporte diario de alquileres.</p>
         <fieldset class="collapsibleClosed">
           <legend>Cambiar fecha</legend>
           <p>
@@ -169,7 +210,7 @@
         </p>
       </div>
       <div id="i-reservas" class="i-tab-content">
-        <p class="msg">Este es el reporte de reservas.</p>
+        <p>Este es el reporte de reservas.</p>
         <fieldset class="collapsible">
           <legend>Cambiar fecha</legend>
           <p>
@@ -182,6 +223,43 @@
         <p class="align-center">
           <button type="button" name="print-reservas" id="print-reservas" style="display: none;">Imprimir</button>
         </p>
+      </div>
+      <div id="i-combustible" class="i-tab-content">
+        <p>Gasto de combustible.</p>
+        <fieldset class="collapsible">
+          <legend>Cambiar fecha</legend>
+          <p>
+            <label for="fecha-inicial-c">Fecha inicial:</label>
+            <input type="text" name="fecha-inicial-c" id="fecha-inicial-c" class="date" />
+            <label for="fecha-final-c">Fecha final:</label>
+            <input type="text" name="fecha-final-c" id="fecha-final-c" class="date" />
+            <button type="button" name="change-combustible" id="change-combustible" class="small">Ver informe</button>
+          </p>
+        </fieldset>
+        <div id="combustible-results"> </div>
+      </div>
+      <div id="i-disponible" class="i-tab-content">
+        <p>Disponibilidad.</p>
+        <fieldset class="collapsible">
+          <legend>Datos</legend>
+          <p>
+            <label for="fecha-inicial-d">Fecha inicial:</label>
+            <input type="text" name="fecha-inicial-d" id="fecha-inicial-d" class="date" />
+            <label for="fecha-final-d">Fecha final:</label>
+            <input type="text" name="fecha-final-d" id="fecha-final-d" class="date" />
+          </p>
+          <p>
+            <label for="idlugar">Sector o comunidad: <span class="required">*</span></label>
+            <select name="idlugar" id="idlugar">
+              <option value="" selected="selected">Seleccione un lugar</option>
+              <?php foreach ($lugares as $lugar) : ?>
+              <option value="<?php print $lugar['id']; ?>"><?php print $lugar['nombre']; ?></option>
+              <?php endforeach; ?>
+            </select>
+            <button type="button" name="change-disponible" id="change-disponible" class="small">Ver disponibilidad</button>
+          </p>
+        </fieldset>
+        <div id="disponible-results"> </div>
       </div>
     </div>
   </div>

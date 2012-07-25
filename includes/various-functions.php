@@ -22,10 +22,71 @@ function get_recibos_dia($fecha) {
                 $bcdb->alquiler, $bcdb->cliente, $bcdb->lugar, $bcdb->maquina, $fecha);
   $recibos = $bcdb->get_results($sql);
 	
-	$total = 0;
-	$data = $recibos;
-	
+	$data = $recibos;	
 	return $data;
+}
+
+/**
+ * Trae alquileres hechos por un cliente.
+ * @param int $idcliente El cliente
+ * @return data;
+ */
+function get_alquileres_cliente($idcliente) {
+	global $bcdb, $bcrs, $pager;
+  $sql = sprintf("SELECT a.*, c.nombres, c.apaterno, c.amaterno, l.nombre as lugar, m.descripcion as maquina
+                FROM %s a
+                INNER JOIN %s c
+                ON a.idcliente = c.id
+                INNER JOIN %s l
+                ON a.idlugar = l.id
+                INNER JOIN %s m
+                ON a.idmaquina = m.id
+                WHERE a.idcliente ='%s'",
+                $bcdb->alquiler, $bcdb->cliente, $bcdb->lugar, $bcdb->maquina, $idcliente);
+  $recibos = ($pager) ? $bcrs->get_results($sql) : $bcdb->get_results($sql);
+	
+	$data = $recibos;	
+	return $data;
+}
+
+/**
+ * Muestra alquileres en un cierto lugar para cierta fecha.
+ */
+function get_disponible($fechai, $fechaf, $idlugar) {
+	global $bcdb, $bcrs, $pager;
+  $sql = sprintf("SELECT a.*, c.nombres, c.apaterno, c.amaterno, l.nombre as lugar, m.descripcion as maquina
+                FROM %s a
+                INNER JOIN %s c
+                ON a.idcliente = c.id
+                INNER JOIN %s l
+                ON a.idlugar = l.id
+                INNER JOIN %s m
+                ON a.idmaquina = m.id
+                WHERE a.idlugar ='%s' 
+                AND fecha BETWEEN '%s' AND '%s'",
+                $bcdb->alquiler, $bcdb->cliente, $bcdb->lugar, $bcdb->maquina, $idlugar, $fechai, $fechaf);
+  $recibos = ($pager) ? $bcrs->get_results($sql) : $bcdb->get_results($sql);
+	
+	$data = $recibos;	
+	return $data;
+}
+
+/**
+ * Trae el gasto de combustible en un rango de fechas.
+ * @param string $fechai
+ * @param string $fechaf
+ * @return string 
+ */
+function get_combustible_fechas($fechai, $fechaf) {
+  global $bcdb;
+  $sql = sprintf("SELECT SUM(combustiblecan) as total 
+        FROM %s
+        WHERE anulado = '0'
+        AND creado 
+        BETWEEN '%s' AND '%s'", 
+        $bcdb->alquiler, $fechai, $fechaf);
+  
+  return $bcdb->get_var($sql);
 }
 
 /**
