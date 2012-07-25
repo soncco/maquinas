@@ -7,7 +7,6 @@
 	
 	$fechai = strftime("%Y-%m-%d %H:%M:%S", strtotime($_POST['fechai']));
 	$fechaf = strftime("%Y-%m-%d 23:59:59", strtotime($_POST['fechaf']));
-  krumo($_POST);
   $idlugar = $_POST['idlugar'];
   
   $lugar = get_item($idlugar, $bcdb->lugar);

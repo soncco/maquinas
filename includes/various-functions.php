@@ -123,7 +123,7 @@ function get_reservas_dia($fecha) {
 */
 function get_recibo($id) {
 	global $bcdb;
-  $sql = sprintf("SELECT a.*, c.nombres, c.nombres, c.apaterno, c.amaterno, l.nombre as lugar, m.descripcion as maquina
+  $sql = sprintf("SELECT a.*, c.nombres, c.nombres, c.apaterno, c.amaterno, o.nombres as operador, l.nombre as lugar, m.descripcion as maquina
                 FROM %s a
                 INNER JOIN %s c
                 ON a.idcliente = c.id
@@ -131,8 +131,10 @@ function get_recibo($id) {
                 ON a.idlugar = l.id
                 INNER JOIN %s m
                 ON a.idmaquina = m.id
+                INNER JOIN %s o
+                ON m.idoperador = o.id
                 WHERE a.id = '%s'",
-                $bcdb->alquiler, $bcdb->cliente, $bcdb->lugar, $bcdb->maquina, $id);
+                $bcdb->alquiler, $bcdb->cliente, $bcdb->lugar, $bcdb->maquina, $bcdb->operador, $id);
 	$recibo = $bcdb->get_row($sql);
   return $recibo;
 }

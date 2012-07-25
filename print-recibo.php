@@ -14,33 +14,35 @@ class PDF extends FPDF {
 		return $data;
 	}
   
-  function Header() {
+  /*function Header() {
 		$this->SetFont('Times', '' ,12);
 		$this->Cell(0, 4, 'MUNICIPALIDAD DISTRITAL DE PUCYURA', 0, 0, 'C');
 		$this->Ln();
 		$this->SetFont('Arial', '' ,12);
 		$this->Cell(0, 10, 'PROV. ANTA - DPTO. CUSCO', 0, 0, 'C');
 		$this->Ln(10);
-	}	
+	}	*/
 
 	//Una tabla más completa
 	function recibo($header, $data) {
 		//krumo($data);
 		$hl = 7; // Espacio a la izquierda
     
-		$this->Rect(15, 30, 190, 79);
+		//$this->Rect(15, 30, 190, 79);
+		//$this->Rect(15, 15, 190, 79);
 		$this->Ln(7);
     
     $this->SetDrawColor(155, 155, 155);
 		
-		$this->SetFont('Times', 'B', 14);
+		$this->SetFont('Times', 'B', 12);
 		$this->Cell(20, 8, utf8_decode('N° ') . $data['id'], 0, 0, 'R');
 
 		$this->SetFont('Arial', '' ,14);
 		$this->Cell(160, 8, strftime('Fecha: %d/%m/%Y', time()), 0, 0, 'R');
 		$this->Ln(12);
     
-    $this->Line(20, 40, 200, 40);
+    //$this->Line(20, 40, 200, 40);
+    //$this->Line(30, 25, 200, 25);
     
 		$this->Cell($hl);
 		$this->SetFont('Arial', '' ,16);
@@ -55,9 +57,9 @@ class PDF extends FPDF {
     
     $this->Cell($hl);
 		$this->Cell(52, 7, "SE ALQUILA LA MAQUINA: ", 0 ,0);
-		$this->Cell(70, 7, utf8_decode($data['maquina']), 1);
+		$this->Cell(90, 7, sprintf('%s/%s', utf8_decode($data['maquina']), utf8_decode($data['operador'])), 1);
     $this->Cell(13, 7, "POR: ", 0 ,0);
-		$this->Cell(50, 7, horas_minutos($data['minutos']), 1);
+		$this->Cell(30, 7, horas_minutos($data['minutos']), 1);
 		$this->Ln(9);
 		
 		$this->Cell($hl);
@@ -78,21 +80,6 @@ class PDF extends FPDF {
 		$this->Cell(38, 7, "OBSERVACIONES: ", 0 ,0);
 		$this->Cell(147, 7, utf8_decode($data['observaciones']), 1);
 		$this->Ln(10);
-		
-		/*$this->Cell($hl);
-		$this->Cell(28, 7, "CONCEPTO: ", 0 ,0);
-		$this->Cell(157, 7, utf8_decode($data['descripcion']), 1);
-		$this->Ln(9);
-		
-		$this->Cell($hl);
-		$this->Cell(28, 7, "ANEXO: ", 0 ,0);
-		$this->Cell(157, 7, utf8_decode($data['observaciones']), 1);
-		$this->Ln(9);
-		
-		$this->Cell($hl);
-		$this->Cell(28, 7, "SON: ", 0 ,0);
-		$this->Cell(157, 7, convertir($data['monto']), 1);
-		$this->Ln(9);*/
 		
 		$cod_hora = strftime("%H:%M:%S", time()-3600) . "(". $_SESSION['loginuser']['id'].")";
 		
@@ -116,5 +103,11 @@ $header = array(utf8_decode('Código'), utf8_decode('Descripción'), 'Monto');
 $data = $pdf->LoadData($_GET['ID']);
 $pdf->AddPage();
 $pdf->Recibo($header, $data);
+$pdf->Ln(10);
+$pdf->Recibo($header, $data);
+$pdf->Rect(15, 15, 190, 79);
+$pdf->Line(30, 25, 200, 25);
+$pdf->Rect(15, 100, 190, 79);
+$pdf->Line(30, 25, 200, 25);
 $pdf->Output();
 ?>
