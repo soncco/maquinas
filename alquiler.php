@@ -51,7 +51,6 @@
             if ($pasados['idmaquina'] == $alquiler['idmaquina'])
               $horas += $pasados['minutos'];
           }
-          echo $horas;
         endif;
         if ($horas + $alquiler['minutos'] > ($limite_dia*60)) :
           $error = true;

@@ -44,7 +44,7 @@ class PDF extends FPDF {
 	function Informe($header, $data) {
 		$hl = 6;
 		//Anchuras de las columnas
-		$w = array(20, 30, 40, 60, 38);
+		$w = array(20, 30, 80, 60, 38, 38);
 		$h = 7; // Alto de las columnas
 		//Cabeceras
 		$this->SetFont('', 'B', '10');
@@ -62,6 +62,7 @@ class PDF extends FPDF {
 				$this->Cell($w[2], $h, utf8_decode($v['lugar']), 'LRB');
 				$this->Cell($w[3], $h, ($v['anulado']) ? "ANULADO" : utf8_decode(sprintf('%s %s %s', $v['nombres'], $v['apaterno'], $v['amaterno'])), 'LRB', 0);
 				$this->Cell($w[4], $h, horas_minutos($v['minutos']),'LRB');
+				$this->Cell($w[5], $h, strftime('%d/%m/%Y', strtotime($recibo['fecha'])) ,'LRB');
 				$this->Ln();
 			endforeach;
 		else:
@@ -70,10 +71,10 @@ class PDF extends FPDF {
 	}
 }
 
-$pdf = new PDF();
+$pdf = new PDF('L');
 $pdf->AliasNbPages();
 //Títulos de las columnas
-$header = array('Nro', utf8_decode('Máquina'), 'Lugar', 'Cliente', 'Tiempo');
+$header = array('Nro', utf8_decode('Máquina'), 'Lugar', 'Cliente', 'Tiempo', 'Para');
 //Carga de datos
 $fecha = $_GET['fecha'];
 $pdf->fecha = $fecha;

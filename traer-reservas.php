@@ -20,6 +20,7 @@
     <th>Lugar</th>
     <th>Cliente</th>
     <th>Tiempo</th>
+	<th>Para</th>
     <th>Acciones</th>
   </tr>
 </thead>
@@ -36,6 +37,7 @@
     <td><?php print $recibo['lugar']; ?></td>
     <td><?php print ($recibo['anulado']) ? "ANULADO" : sprintf('%s %s %s', $recibo['nombres'], $recibo['apaterno'], $recibo['amaterno']); ?></td>
     <td><?php print horas_minutos($recibo['minutos']); ?></td>
+	<td><?php print strftime('%d/%m/%Y', strtotime($recibo['fecha'])); ?></td>
     <td><a href="ver-recibos.php?id=<?php print $recibo['id']; ?>">Detalles</a></td>
     <?php $alt = ($alt == "even") ? "odd" : "even"; ?>
   </tr>
