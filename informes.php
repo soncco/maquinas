@@ -15,6 +15,9 @@
   
   // Lugares.
   $lugares = get_items($bcdb->lugar);
+  
+  // Operadores.
+  $operadores = get_items($bcdb->operador);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -122,6 +125,24 @@
 			 });
 		});
     
+    // Muestra horas trabajadas.
+		$('#change-opera').bind('click', function(){
+			$(this).after(simg);
+			var fechai = $("#fecha-inicial-o").val();
+      var fechaf = $("#fecha-final-o").val();
+      var idoperador = $("#idoperador").val();
+			$.ajax({
+			   type: "POST",
+			   url: "traer-opera.php",
+			   data: "fechai=" + fechai + "&fechaf=" + fechaf + "&idoperador=" + idoperador,
+			   success: function(msg){
+          $('#opera-results').empty();
+          $('#opera-results').append(msg);
+          $('#simg').remove();
+			   }
+			 });
+		});
+    
 	});
 </script>
 <title>Informes | Alquiler de máquinas</title>
@@ -148,8 +169,9 @@
     <ul class="i-tabs">
       <li><a href="#i-diario">Diario</a></li>
       <li><a href="#i-reservas">Reservas</a></li>
-      <li><a href="#i-combustible">Combustible</a></li>      
-      <li><a href="#i-disponible">Disponibilidad</a></li>      
+      <li><a href="#i-combustible">Combustible</a></li>    
+      <li><a href="#i-disponible">Disponibilidad</a></li>
+      <li><a href="#i-opera">Operadores</a></li>
     </ul>
     <div class="i-tab-container">
       <div id="i-diario" class="i-tab-content">
@@ -251,7 +273,6 @@
           <p>
             <label for="idlugar">Sector o comunidad: <span class="required">*</span></label>
             <select name="idlugar" id="idlugar">
-              <option value="" selected="selected">Seleccione un lugar</option>
               <?php foreach ($lugares as $lugar) : ?>
               <option value="<?php print $lugar['id']; ?>"><?php print $lugar['nombre']; ?></option>
               <?php endforeach; ?>
@@ -260,6 +281,28 @@
           </p>
         </fieldset>
         <div id="disponible-results"> </div>
+      </div>
+      <div id="i-opera" class="i-tab-content">
+        <p>Operadores.</p>
+        <fieldset class="collapsible">
+          <legend>Datos</legend>
+          <p>
+            <label for="fecha-inicial-d">Fecha inicial:</label>
+            <input type="text" name="fecha-inicial-o" id="fecha-inicial-o" class="date" />
+            <label for="fecha-final-d">Fecha final:</label>
+            <input type="text" name="fecha-final-o" id="fecha-final-o" class="date" />
+          </p>
+          <p>
+            <label for="idoperador">Operador: <span class="required">*</span></label>
+            <select name="idoperador" id="idoperador">
+              <?php foreach ($operadores as $operador) : ?>
+              <option value="<?php print $operador['id']; ?>"><?php print $operador['nombres']; ?></option>
+              <?php endforeach; ?>
+            </select>
+            <button type="button" name="change-opera" id="change-opera" class="small">Ver horas trabajadas</button>
+          </p>
+        </fieldset>
+        <div id="opera-results"> </div>
       </div>
     </div>
   </div>

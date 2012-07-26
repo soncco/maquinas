@@ -51,6 +51,10 @@ function get_alquileres_cliente($idcliente) {
 
 /**
  * Muestra alquileres en un cierto lugar para cierta fecha.
+ * @param type $fechai
+ * @param type $fechaf
+ * @param type $idlugar
+ * @return type 
  */
 function get_disponible($fechai, $fechaf, $idlugar) {
 	global $bcdb, $bcrs, $pager;
@@ -68,6 +72,34 @@ function get_disponible($fechai, $fechaf, $idlugar) {
   $recibos = ($pager) ? $bcrs->get_results($sql) : $bcdb->get_results($sql);
 	
 	$data = $recibos;	
+	return $data;
+}
+
+/**
+ * Muestra alquileres en un cierto lugar para cierta fecha.
+ * @param string $fechai
+ * @param string $fechaf
+ * @param int $idoperador
+ * @return type 
+ */
+function get_horas_trabajadas($fechai, $fechaf, $idoperador) {
+	global $bcdb, $bcrs, $pager;
+  $sql = sprintf("SELECT a.*, c.nombres, c.apaterno, c.amaterno, l.nombre as lugar, m.descripcion as maquina
+                FROM %s a
+                INNER JOIN %s c
+                ON a.idcliente = c.id
+                INNER JOIN %s l
+                ON a.idlugar = l.id
+                INNER JOIN %s m
+                ON a.idmaquina = m.id
+                INNER JOIN %s o
+                ON m.idoperador = o.id
+                WHERE o.id ='%s' 
+                AND fecha BETWEEN '%s' AND '%s'",
+                $bcdb->alquiler, $bcdb->cliente, $bcdb->lugar, $bcdb->maquina, $bcdb->operador, $idoperador, $fechai, $fechaf);
+  $recibos = ($pager) ? $bcrs->get_results($sql) : $bcdb->get_results($sql);
+	
+  $data = $recibos;	
 	return $data;
 }
 
