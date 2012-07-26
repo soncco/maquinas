@@ -183,7 +183,7 @@
             <select name="idmaquina" id="id_maquina">
               <option value="" selected="selected">Seleccione una máquina</option>
               <?php foreach ($maquinas as $maquina) : ?>
-              <option value="<?php print $maquina['id']; ?>"><?php print $maquina['descripcion']; ?></option>
+              <option value="<?php print $maquina['id']; ?>"><?php print sprintf("%s/%s", $maquina['descripcion'], get_var_from_field('nombres', 'id', $maquina['idoperador'], $bcdb->operador)); ?></option>
               <?php endforeach; ?>
             </select>
             <label for="minutos">Minutos: <span class="required">*</span>:</label>
@@ -197,9 +197,9 @@
           </p>
           <p>
             <label for="combustiblenro">Vale de combustible Nro: <span class="required">*</span>:</label>
-            <input type="text" name="combustiblenro" id="combustiblenro" size="10" />
+            <input type="text" name="combustiblenro" id="combustiblenro" size="10" class="required" />
             <label for="combustiblecan">Cantidad de combustible: <span class="required">*</span>:</label>
-            <input type="text" name="combustiblecan" id="combustiblecan" size="5" /> galones
+            <input type="text" name="combustiblecan" id="combustiblecan" size="5" class="required" /> galones
           </p>
           <p>
             <label for="observaciones">Observaciones:</label><br />&nbsp;
