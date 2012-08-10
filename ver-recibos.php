@@ -107,7 +107,7 @@
           <label for="combustiblenro">Vale de combustible Nro:</label>
           <strong><?php print $recibo['combustiblenro']; ?></strong>
           <label for="combustiblecan">Cantidad de combustible:</label>
-          <strong><?php print $recibo['combustiblenro']; ?></strong>
+          <strong><?php print $recibo['combustiblecan']; ?></strong>
         </p>
         <p>
           <label for="observaciones">Observaciones:</label><br />&nbsp;
