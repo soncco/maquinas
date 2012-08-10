@@ -107,9 +107,10 @@ function get_horas_trabajadas($fechai, $fechaf, $idoperador) {
  * Trae el gasto de combustible en un rango de fechas.
  * @param string $fechai
  * @param string $fechaf
+ * @param string $maquina
  * @return string 
  */
-function get_combustible_fechas($fechai, $fechaf) {
+function get_combustible_fechas($fechai, $fechaf, $maquina = "") {
   global $bcdb;
   $sql = sprintf("SELECT SUM(combustiblecan) as total 
         FROM %s
@@ -118,18 +119,23 @@ function get_combustible_fechas($fechai, $fechaf) {
         BETWEEN '%s' AND '%s'", 
         $bcdb->alquiler, $fechai, $fechaf);
   
+  if (!empty($maquina)) {
+    $sql .= sprintf(" AND idmaquina = '%s'", $maquina);
+  }
+  
   return $bcdb->get_var($sql);
 }
 
 /**
-* Devuelve los alquileres girados en cierta fecha
+* Devuelve los alquileres girados en cierta fecha.
 *
-* @param date $fecha La fecha
+* @param date $fecha La fecha,
+* @param int $maquina El ID de la máquina.
 * @return array
 */
-function get_reservas_dia($fecha) {
+function get_reservas_dia($fecha, $maquina = "") {
   global $bcdb;
-  $fecha = strftime("%Y-%m-%d", strtotime($_POST['fecha']));
+  $fecha = strftime("%Y-%m-%d", strtotime($fecha));
   $sql = sprintf("SELECT a.*, c.nombres, c.apaterno, c.amaterno, l.nombre as lugar, m.descripcion as maquina
                 FROM %s a
                 INNER JOIN %s c
@@ -140,8 +146,11 @@ function get_reservas_dia($fecha) {
                 ON a.idmaquina = m.id
                 WHERE a.fecha LIKE '%s%%'",
                 $bcdb->alquiler, $bcdb->cliente, $bcdb->lugar, $bcdb->maquina, $fecha);
+  
+  if (!empty($maquina)) {
+    $sql .= sprintf(" AND m.id = '%s'", $maquina);
+  }
 	$recibos = $bcdb->get_results($sql);
-	
 	$data = $recibos;
 	
 	return $data;
@@ -284,7 +293,7 @@ function search_clientes($palabra) {
 */
 function get_alquileres($id_maquina, $fecha_inicio, $fecha_fin) {
 	global $bcdb;
-	$sql = "SELECT a.id as id_alquiler, c.nombres, c.apaterno, c.amaterno, a.minutos, a.fecha, a.anulado
+	$sql = "SELECT a.id as id_alquiler, c.nombres, c.apaterno, c.amaterno, a.minutos, a.fecha, a.anulado, a.combustiblecan
 			FROM $bcdb->alquiler a
 			INNER JOIN $bcdb->maquina m
 			ON a.idmaquina = m.id
@@ -296,16 +305,19 @@ function get_alquileres($id_maquina, $fecha_inicio, $fecha_fin) {
 	$alq = $bcdb->get_results($sql);
 	
 	$total = 0;
+  $combustible = 0;
 	$data = array();
 	
 	if($alq) :
 		foreach($alq as $k => $v) :
 			$total += $v['minutos'];
+      $combustible += $v['combustiblecan'];
 		endforeach;
 	endif;
 	
 	$data['alquileres'] = $alq;
 	$data['total'] = $total;
+	$data['totalcombustible'] = $combustible;
 	return $data;
 }
 

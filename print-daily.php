@@ -44,7 +44,7 @@ class PDF extends FPDF {
 	function Informe($header, $data) {
 		$hl = 6;
 		//Anchuras de las columnas
-		$w = array(20, 30, 80, 60, 38, 38);
+		$w = array(20, 50, 50, 70, 38, 38);
 		$h = 7; // Alto de las columnas
 		//Cabeceras
 		$this->SetFont('', 'B', '10');

@@ -12,7 +12,7 @@ class PDF extends FPDF {
 	
 	function LoadData() {
 		global $bcdb;
-		$data = get_recibos_dia($this->fecha);
+		$data = get_reservas_dia($this->fecha, $this->maquina);
 		return $data;
 	}
 	
@@ -23,7 +23,7 @@ class PDF extends FPDF {
 		$this->SetFont('Arial', '' ,12);
 		$this->Cell(0, 10, 'PROV. ANTA - DPTO. CUSCO', 0, 0, 'C');
     $this->Ln();
-    $this->Cell(0, 10, 'Lista de alquileres', 0, 0, 'C');
+    $this->Cell(0, 10, 'Lista de reservas', 0, 0, 'C');
 		$this->Ln(10);
 		$this->SetFont('Arial', '' ,12);
 		$this->Cell(6);
@@ -44,7 +44,7 @@ class PDF extends FPDF {
 	function Informe($header, $data) {
 		$hl = 6;
 		//Anchuras de las columnas
-		$w = array(20, 30, 40, 60, 38);
+		$w = array(20, 50, 50, 70, 38, 38);
 		$h = 7; // Alto de las columnas
 		//Cabeceras
 		$this->SetFont('', 'B', '10');
@@ -58,10 +58,11 @@ class PDF extends FPDF {
 			foreach($data as $k =>$v) :
 				$this->Cell($hl);
 				$this->Cell($w[0], $h, $v['id'], 'LRB', 0, 'R');
-				$this->Cell($w[1], $h, $v['maquina'], 'LRB');
-				$this->Cell($w[2], $h, $v['lugar'], 'LRB');
+				$this->Cell($w[1], $h, utf8_decode($v['maquina']), 'LRB');
+				$this->Cell($w[2], $h, utf8_decode($v['lugar']), 'LRB');
 				$this->Cell($w[3], $h, ($v['anulado']) ? "ANULADO" : utf8_decode(sprintf('%s %s %s', $v['nombres'], $v['apaterno'], $v['amaterno'])), 'LRB', 0);
 				$this->Cell($w[4], $h, horas_minutos($v['minutos']),'LRB');
+				$this->Cell($w[5], $h, strftime('%d/%m/%Y', strtotime($v['fecha'])) ,'LRB');
 				$this->Ln();
 			endforeach;
 		else:
@@ -69,14 +70,15 @@ class PDF extends FPDF {
 		endif;
 	}
 }
-
-$pdf = new PDF();
+$pdf = new PDF('L');
 $pdf->AliasNbPages();
 //Títulos de las columnas
-$header = array('Nro', utf8_decode('Máquina'), 'Lugar', 'Cliente', 'Tiempo');
+$header = array('Nro', utf8_decode('Máquina'), 'Lugar', 'Cliente', 'Tiempo', 'Para');
 //Carga de datos
 $fecha = $_GET['fecha'];
 $pdf->fecha = $fecha;
+$maquina = $_GET['maquina'];
+$pdf->maquina = $maquina;
 $data = $pdf->LoadData();
 $pdf->AddPage();
 

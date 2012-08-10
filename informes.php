@@ -41,22 +41,23 @@
 		 * 
 		 */
 		 
-		 // Imprime los reportes diarios
+		 // Imprime los reportes diarios.
 		$('#print-daily').bind('click', function(){
 			fecha = $('#fecha').val();
 			window.open('print-daily.php?fecha='+fecha, 'print', 'location=0, status=0, width=800, height=600');
 		});
-		
-		// Imprime los reportes por fecha
-		$('#print-per').bind('click', function() {
-			var fecha_inicio = $("#fecha-inicio").val();
-			var fecha_fin = $("#fecha-fin").val();
-			window.open('print-per.php?fecha-inicio='+fecha_inicio+'&fecha-fin='+fecha_fin, 'print', 'location=0, status=0, width=800, height=600');
-		});
+    
+    print_reserva = function() {
+			var maquina = $("#maquina-reservas").val();
+      var fecha = $("#fecha-reservas").val();
+			window.open("print-reservas.php?fecha=" + fecha + "&maquina=" + maquina, 'print', 'location=0, status=0, width=800, height=600');
+		};
+    
+    // Imprime los reportes por reserva.
 		
 		simg = '<img src="images/loading.gif" alt="Cargando" id="simg" />';
 		
-		// Muestra reportes diarios según fecha
+		// Muestra reportes diarios según fecha.
 		$('#change-daily').bind('click', function(){
 			$(this).after(simg);
 			var fecha = $("#fecha-daily").val();
@@ -76,15 +77,17 @@
     // Muestra los reportes de reservas.
 		$('#change-reservas').bind('click', function(){
 			$(this).after(simg);
-			var fecha = $("#fecha-reservas").val();
+			var maquina = $("#maquina-reservas").val();
+      var fecha = $("#fecha-reservas").val();
 			$('#fecha').val(fecha);
 			$.ajax({
 			   type: "POST",
 			   url: "traer-reservas.php",
-			   data: "fecha=" + fecha,
+			   data: "fecha=" + fecha + "&maquina=" + maquina,
 			   success: function(msg){
           $('#reserva-results').empty();
           $('#reserva-results').append(msg);
+          $('#reserva-results').find('#print-reservas').click(print_reserva);
           $('#simg').remove();
 			   }
 			 });
@@ -95,10 +98,11 @@
 			$(this).after(simg);
 			var fechai = $("#fecha-inicial-c").val();
       var fechaf = $("#fecha-final-c").val();
+      var maquina = $("#maquina-combustible").val();
 			$.ajax({
 			   type: "POST",
 			   url: "traer-combustible.php",
-			   data: "fechai=" + fechai + "&fechaf=" + fechaf,
+			   data: "fechai=" + fechai + "&fechaf=" + fechaf + "&maquina=" + maquina,
 			   success: function(msg){
           $('#combustible-results').empty();
           $('#combustible-results').append(msg);
@@ -234,9 +238,18 @@
       <div id="i-reservas" class="i-tab-content">
         <p>Este es el reporte de reservas.</p>
         <fieldset class="collapsible">
-          <legend>Cambiar fecha</legend>
+          <legend>Datos de la reserva</legend>
           <p>
-            <label for="fecha-reservas">Escoja la fecha del informe:</label>
+            <label for="maquina-reservas">Escoja la máquina:</label>
+            <select name="maquina-reservas" id="maquina-reservas">
+              <option value="">Todas las máquinas</option>
+              <?php foreach ($maquinas as $maquina) : ?>
+              <option value="<?php print $maquina['id']; ?>"><?php print sprintf("%s/%s", $maquina['descripcion'], get_var_from_field('nombres', 'id', $maquina['idoperador'], $bcdb->operador)); ?></option>
+              <?php endforeach; ?>
+            </select>
+          </p>
+          <p>
+            <label for="fecha-reservas">Escoja la fecha de la reserva:</label>
             <input type="text" name="fecha-reservas" id="fecha-reservas" class="date" value="<?php print $fecha; ?>" />
             <button type="button" name="change-reservas" id="change-reservas" class="small">Cambiar</button>
           </p>
@@ -247,9 +260,18 @@
         </p>
       </div>
       <div id="i-combustible" class="i-tab-content">
-        <p>Gasto de combustible.</p>
+        <p>Gasto de combustible. Para un informe más detallado <a href="maquinas.php">revise las máquinas existentes</a>.</p>
         <fieldset class="collapsible">
-          <legend>Cambiar fecha</legend>
+          <legend>Datos del reporte</legend>
+          <p>
+            <label for="maquina-combustible">Escoja la máquina:</label>
+            <select name="maquina-combustible" id="maquina-combustible">
+              <option value="">Todas las máquinas</option>
+              <?php foreach ($maquinas as $maquina) : ?>
+              <option value="<?php print $maquina['id']; ?>"><?php print sprintf("%s/%s", $maquina['descripcion'], get_var_from_field('nombres', 'id', $maquina['idoperador'], $bcdb->operador)); ?></option>
+              <?php endforeach; ?>
+            </select>
+          </p>
           <p>
             <label for="fecha-inicial-c">Fecha inicial:</label>
             <input type="text" name="fecha-inicial-c" id="fecha-inicial-c" class="date" />

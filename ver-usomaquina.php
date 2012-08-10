@@ -137,6 +137,10 @@
             <th colspan="3" class="align-right no-border">Total:</th>
             <th class="align-right"><?php print horas_minutos($data['total']); ?></th>
           </tr>
+          <tr>
+            <th colspan="3" class="align-right no-border">Total combustible:</th>
+            <th class="align-right"><?php print $data['totalcombustible']; ?> galones</th>
+        </tr>
         </tfoot>
         <?php endif; ?>
       </table>

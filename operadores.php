@@ -94,7 +94,7 @@
         </p>
       </fieldset>
     </form>
-    <fieldset class="<?php if(!isset($_GET['PageIndex'])): ?>collapsibleClosed<?php else: ?>collapsible<?php endif; ?>">
+    <fieldset class="collapsible">
       <legend>Operadores existentes</legend>
       <p class="war">Los operadores se pueden editar, sin embargo tenga cuidado al hacerlo ya que se pueden confundir datos existentes.</p>
       <table>

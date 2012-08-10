@@ -5,7 +5,6 @@
 	require_once('home.php');
 	require_once('redirect.php');
 	
-	
 	$fecha = $_POST['fecha'];
 	
 	$data = get_recibos_dia($fecha);

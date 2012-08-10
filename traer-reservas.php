@@ -7,8 +7,9 @@
 	
 	
 	$fecha = $_POST['fecha'];
+  $maquina = $_POST['maquina'];
 	
-	$data = get_reservas_dia($fecha);
+	$data = get_reservas_dia($fecha, $maquina);
 	
 ?>
 <table>
@@ -20,7 +21,7 @@
     <th>Lugar</th>
     <th>Cliente</th>
     <th>Tiempo</th>
-	<th>Para</th>
+    <th>Para</th>
     <th>Acciones</th>
   </tr>
 </thead>
@@ -44,8 +45,11 @@
   <?php endforeach; ?>
   <?php else: ?>
   <tr class="<?php print $alt; ?>">
-    <th colspan="6">No se ha registrado ningún pago en esta fecha</th>
+    <th colspan="7">No se ha registrado ningún pago en esta fecha</th>
   </tr>
   <?php endif; ?>
 </tbody>
 </table>
+<p class="align-center">
+  <button type="button" name="print-reservas" id="print-reservas">Imprimir</button>
+</p>
