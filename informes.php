@@ -53,6 +53,13 @@
 			window.open("print-reservas.php?fecha=" + fecha + "&maquina=" + maquina, 'print', 'location=0, status=0, width=800, height=600');
 		};
     
+    print_ingreso = function() {
+			var maquina = $("#maquina-ingreso").val();
+      var fechai = $("#fecha-inicial-i").val();
+      var fechaf = $("#fecha-final-i").val();
+			window.open("print-ingreso.php?fechai=" + fechai + "&fechaf=" + fechaf + "&maquina=" + maquina, 'print', 'location=0, status=0, width=800, height=600');
+		};
+    
     // Imprime los reportes por reserva.
 		
 		simg = '<img src="images/loading.gif" alt="Cargando" id="simg" />';
@@ -147,6 +154,25 @@
 			 });
 		});
     
+    // Muestra el reporte de ingresos.
+		$('#change-ingreso').bind('click', function(){
+			$(this).after(simg);
+			var fechai = $("#fecha-inicial-i").val();
+      var fechaf = $("#fecha-final-i").val();
+      var maquina = $("#maquina-ingreso").val();
+			$.ajax({
+			   type: "POST",
+			   url: "traer-ingreso.php",
+			   data: "fechai=" + fechai + "&fechaf=" + fechaf + "&maquina=" + maquina,
+			   success: function(msg){
+          $('#ingreso-results').empty();
+          $('#ingreso-results').append(msg);
+          $('#ingreso-results').find('#print-ingreso').click(print_ingreso);
+          $('#simg').remove();
+			   }
+			 });
+		});
+    
 	});
 </script>
 <title>Informes | Alquiler de máquinas</title>
@@ -176,6 +202,7 @@
       <li><a href="#i-combustible">Combustible</a></li>    
       <li><a href="#i-disponible">Disponibilidad</a></li>
       <li><a href="#i-opera">Operadores</a></li>
+      <li><a href="#i-dinero">Ingresos (S./)</a></li>
     </ul>
     <div class="i-tab-container">
       <div id="i-diario" class="i-tab-content">
@@ -274,9 +301,9 @@
           </p>
           <p>
             <label for="fecha-inicial-c">Fecha inicial:</label>
-            <input type="text" name="fecha-inicial-c" id="fecha-inicial-c" class="date" />
+            <input type="text" name="fecha-inicial-c" id="fecha-inicial-c" class="date" value="<?php print $fecha; ?>" />
             <label for="fecha-final-c">Fecha final:</label>
-            <input type="text" name="fecha-final-c" id="fecha-final-c" class="date" />
+            <input type="text" name="fecha-final-c" id="fecha-final-c" class="date" value="<?php print $fecha; ?>" />
             <button type="button" name="change-combustible" id="change-combustible" class="small">Ver informe</button>
           </p>
         </fieldset>
@@ -288,9 +315,9 @@
           <legend>Datos</legend>
           <p>
             <label for="fecha-inicial-d">Fecha inicial:</label>
-            <input type="text" name="fecha-inicial-d" id="fecha-inicial-d" class="date" />
+            <input type="text" name="fecha-inicial-d" id="fecha-inicial-d" class="date" value="<?php print $fecha; ?>" />
             <label for="fecha-final-d">Fecha final:</label>
-            <input type="text" name="fecha-final-d" id="fecha-final-d" class="date" />
+            <input type="text" name="fecha-final-d" id="fecha-final-d" class="date" value="<?php print $fecha; ?>" />
           </p>
           <p>
             <label for="idlugar">Sector o comunidad: <span class="required">*</span></label>
@@ -310,9 +337,9 @@
           <legend>Datos</legend>
           <p>
             <label for="fecha-inicial-d">Fecha inicial:</label>
-            <input type="text" name="fecha-inicial-o" id="fecha-inicial-o" class="date" />
+            <input type="text" name="fecha-inicial-o" id="fecha-inicial-o" class="date" value="<?php print $fecha; ?>" />
             <label for="fecha-final-d">Fecha final:</label>
-            <input type="text" name="fecha-final-o" id="fecha-final-o" class="date" />
+            <input type="text" name="fecha-final-o" id="fecha-final-o" class="date" value="<?php print $fecha; ?>" />
           </p>
           <p>
             <label for="idoperador">Operador: <span class="required">*</span></label>
@@ -325,6 +352,29 @@
           </p>
         </fieldset>
         <div id="opera-results"> </div>
+      </div>
+      <div id="i-dinero" class="i-tab-content">
+        <p>Informe de ingresos.</p>
+        <fieldset class="collapsible">
+          <legend>Datos del reporte</legend>
+          <p>
+            <label for="maquina-ingreso">Escoja la máquina:</label>
+            <select name="maquina-ingreso" id="maquina-ingreso">
+              <option value="">Todas las máquinas</option>
+              <?php foreach ($maquinas as $maquina) : ?>
+              <option value="<?php print $maquina['id']; ?>"><?php print sprintf("%s/%s", $maquina['descripcion'], get_var_from_field('nombres', 'id', $maquina['idoperador'], $bcdb->operador)); ?></option>
+              <?php endforeach; ?>
+            </select>
+          </p>
+          <p>
+            <label for="fecha-inicial-i">Fecha inicial:</label>
+            <input type="text" name="fecha-inicial-i" id="fecha-inicial-i" class="date" value="<?php print $fecha; ?>" />
+            <label for="fecha-final-i">Fecha final:</label>
+            <input type="text" name="fecha-final-i" id="fecha-final-i" class="date" value="<?php print $fecha; ?>" />
+            <button type="button" name="change-ingreso" id="change-ingreso" class="small">Ver informe</button>
+          </p>
+        </fieldset>
+        <div id="ingreso-results"> </div>
       </div>
     </div>
   </div>

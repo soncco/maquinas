@@ -14,9 +14,11 @@
 	$data = get_horas_trabajadas($fechai, $fechaf, $idoperador);
   
   $horas = 0;
-  foreach ($data as $alquiler) {
-    $horas += $alquiler['minutos'];
-  }	
+  if ($data) {
+    foreach ($data as $alquiler) {
+      $horas += $alquiler['minutos'];
+    }	
+  }
 ?>
 <h4>Informe del <?php print utf8_encode(strftime("%d/%m/%Y", strtotime($_POST['fechai']))); ?>
  al <?php print utf8_encode(strftime("%d/%m/%Y", strtotime($_POST['fechaf']))); ?> del trabajador <?php print $operador['nombres']; ?></h4>

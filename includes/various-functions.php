@@ -126,6 +126,25 @@ function get_combustible_fechas($fechai, $fechaf, $maquina = "") {
   return $bcdb->get_var($sql);
 }
 
+function get_ingreso_fechas($fechai, $fechaf, $maquina = "") {
+  global $bcdb;
+  $sql = sprintf("SELECT a.*, c.nombres, c.apaterno, c.amaterno, l.nombre as lugar, m.descripcion as maquina
+                FROM %s a
+                INNER JOIN %s c
+                ON a.idcliente = c.id
+                INNER JOIN %s l
+                ON a.idlugar = l.id
+                INNER JOIN %s m
+                ON a.idmaquina = m.id
+                WHERE a.fecha BETWEEN '%s' AND '%s'", 
+        $bcdb->alquiler, $bcdb->cliente, $bcdb->lugar, $bcdb->maquina, $fechai, $fechaf);
+  
+  if (!empty($maquina)) {
+    $sql .= sprintf(" AND a.idmaquina = '%s'", $maquina);
+  }
+  return $bcdb->get_results($sql);
+}
+
 /**
 * Devuelve los alquileres girados en cierta fecha.
 *

@@ -14,6 +14,7 @@
 		$alquiler = array(
 			'fecha' => strftime("%Y-%m-%d %H:%M:%S", strtotime($_POST['fecha'])),
 			'recibo' => $_POST['recibo'],
+			'monto' => $_POST['monto'],
 			'idcliente' => $_POST['idcliente'],
 			'idlugar' => $_POST['idlugar'],
 			'idmaquina' => $_POST['idmaquina'],
@@ -30,6 +31,7 @@
 		// Todo
 		if (empty($alquiler['fecha']) ||
             empty($alquiler['recibo']) ||
+            empty($alquiler['monto']) ||
             empty($alquiler['idcliente']) ||
             empty($alquiler['idlugar']) ||
             empty($alquiler['idmaquina']) ||
@@ -167,7 +169,9 @@
             <label for="fecha">Para la fecha: <span class="required">*</span>:</label>
             <input type="text" name="fecha" id="fecha" size="20" class="date" />
             <label for="recibo">Recibo de caja: <span class="required">*</span></label>
-            <input type="text" name="recibo" id="recibo" size="10" maxlength="20" />
+            <input type="text" name="recibo" id="recibo" size="10" maxlength="20" class="required" />
+            <label for="monto">Monto (S/.): <span class="required">*</span></label>
+            <input type="text" name="monto" id="monto" size="8" maxlength="8" class="required number" />
           </p>
           <p>
             <label for="idlugar">Sector o comunidad: <span class="required">*</span></label>
@@ -188,7 +192,7 @@
             </select>
             <label for="minutos">Minutos: <span class="required">*</span>:</label>
             <select name="minutos" id="minutos">
-              <option value="" selected="selected">Escoge el tiempo</option>
+              <option value="" selected="selected" class="required">Escoge el tiempo</option>
               <?php $tiempo = convierte_horas(get_option('limite_dia')*60) ?>
               <?php foreach ($tiempo as $k=>$v) : ?>
               <option value="<?php print $k; ?>"><?php print $v; ?></option>
@@ -202,7 +206,7 @@
             <input type="text" name="combustiblecan" id="combustiblecan" size="5" class="required" /> galones
           </p>
           <p>
-            <label for="observaciones">Observaciones:</label><br />&nbsp;
+            <label for="observaciones">Observaciones:</label><br />
             <textarea rows="8" cols="95" name="observaciones" id="observaciones"></textarea>
           </p>
           <p class="align-center">

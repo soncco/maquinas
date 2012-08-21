@@ -26,6 +26,7 @@
 <link rel="stylesheet" type="text/css" media="screen" href="/css/layout.css" />
 <link href="/favicon.ico" type="image/ico" rel="shortcut icon" />
 <script type="text/javascript" src="/scripts/jquery-1.3.2.min.js"></script>
+<script type="text/javascript" src="/scripts/jquery.jeditable.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
 		/**
@@ -35,7 +36,12 @@
 		$('#print').bind('click', function(){
 			ID = $('#id').val();
 			window.open('print-recibo.php?ID='+ID, 'print', 'location=0, status=0, width=800, height=600');
-		}); 
+		});
+    
+    $(".click").editable("/datos-recibo.php", {
+			indicator : "Guardando...",
+			tooltip   : "Click para editar..."
+		});
 		
 		// Anula un recibo
 		$('#anular').bind('click', function(){
@@ -86,8 +92,12 @@
         <p>
           <label for="fecha">Fecha:</label>
           <strong><?php print strftime("%d %b %Y", strtotime($recibo['fecha'])); ?></strong>
+        </p>
+        <p>
           <label for="recibo">Recibo de caja: </label>
-          <strong><?php print $recibo['recibo']; ?></strong>
+          <strong><span class="click" id="recibo-<?php print $recibo['id']; ?>"><?php print $recibo['recibo']; ?></span></strong>
+          <label for="monto">Monto (S/.): </label>
+          <strong><span class="click" id="monto-<?php print $recibo['id']; ?>"><?php print $recibo['monto']; ?></span></strong>
         </p>
         <p>
           <label for="cliente">Cliente:</label>
@@ -100,18 +110,18 @@
         <p>
           <label for="idmaquina">Máquina:</label>
           <strong><?php print $recibo['maquina']; ?></strong>
-          <label for="minutos">Tiempos:</label>
+          <label for="minutos">Tiempo:</label>
           <strong><?php print horas_minutos($recibo['minutos']); ?></strong> 
         </p>
         <p>
           <label for="combustiblenro">Vale de combustible Nro:</label>
-          <strong><?php print $recibo['combustiblenro']; ?></strong>
+          <strong><span class="click" id="combustiblenro-<?php print $recibo['id']; ?>"><?php print $recibo['combustiblenro']; ?></span></strong>
           <label for="combustiblecan">Cantidad de combustible:</label>
-          <strong><?php print $recibo['combustiblecan']; ?></strong>
+          <strong><span class="click" id="combustiblecan-<?php print $recibo['id']; ?>"><?php print $recibo['combustiblecan']; ?></span></strong>
         </p>
         <p>
           <label for="observaciones">Observaciones:</label><br />&nbsp;
-           <strong><?php print $recibo['observaciones']; ?></strong>
+           <strong><span class="click" id="observaciones-<?php print $recibo['id']; ?>"><?php print $recibo['observaciones']; ?></span></strong>
         </p>
         <p class="align-center">
           <button type="button" name="print" id="print">Imprimir</button>
@@ -120,6 +130,7 @@
           <?php endif; ?>
           <input type="hidden" name="id" id="id" value="<?php print $id; ?>" />
         </p>
+        <p class="war">Los datos del alquiler se pueden editar, sin embargo tenga cuidado al hacerlo porque podrían generar datos confusos.</p>
       </fieldset>
     </form>
   </div>
