@@ -44,7 +44,7 @@ class PDF extends FPDF {
 	function Informe($header, $data) {
 		$hl = 6;
 		//Anchuras de las columnas
-		$w = array(10, 45, 50, 70, 38, 28, 25);
+		$w = array(10, 45, 25, 75, 28, 22, 21, 25);
 		$h = 7; // Alto de las columnas
 		//Cabeceras
 		$this->SetFont('', 'B', '10');
@@ -64,13 +64,14 @@ class PDF extends FPDF {
 				$this->Cell($w[3], $h, ($v['anulado']) ? "ANULADO" : utf8_decode(sprintf('%s %s %s', $v['nombres'], $v['apaterno'], $v['amaterno'])), 'LRB', 0);
 				$this->Cell($w[4], $h, horas_minutos($v['minutos']),'LRB');
 				$this->Cell($w[5], $h, strftime('%d/%m/%Y', strtotime($v['fecha'])) ,'LRB');
-				$this->Cell($w[6], $h, ($v['monto']) ,'LRB', 0, 'R');
+				$this->Cell($w[6], $h, ($v['recibo']) ,'LRB', 0, 'R');
+				$this->Cell($w[7], $h, ($v['monto']) ,'LRB', 0, 'R');
 				$this->Ln();
         $total += $v['monto'];
 			endforeach;
       $this->Cell($hl);
-      $this->Cell($w[0]+$w[1]+$w[2]+$w[3]+$w[4]+$w[5], $h, 'Total de ingresos (S/.)', 'R', 0, 'R');
-      $this->Cell($w[6], $h, number_format($total, '2', '.', ','), 'LRB', 0, 'R');
+      $this->Cell($w[0]+$w[1]+$w[2]+$w[3]+$w[4]+$w[5]+$w[6], $h, 'Total de ingresos (S/.)', 'R', 0, 'R');
+      $this->Cell($w[7], $h, number_format($total, '2', '.', ','), 'LRB', 0, 'R');
 		else:
 			$this->Cell(array_sum($w),8, utf8_decode('No se ha registrado ningún alquiler en esta fecha'));
 		endif;
@@ -80,7 +81,7 @@ class PDF extends FPDF {
 $pdf = new PDF('L');
 $pdf->AliasNbPages();
 //Títulos de las columnas
-$header = array('Nro', utf8_decode('Máquina'), 'Lugar', 'Cliente', 'Tiempo', 'Para', 'Monto');
+$header = array('Nro', utf8_decode('Máquina'), 'Lugar', 'Cliente', 'Tiempo', 'Para', 'Nro Recibo', 'Monto');
 //Carga de datos
 $fechai = $_GET['fechai'];
 $pdf->fechai = $fechai;
